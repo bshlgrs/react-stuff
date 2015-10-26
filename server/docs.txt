@@ -1,0 +1,142 @@
+WEBrick::HTTPRequest
+
+An HTTP request. This is consumed by service and do_* methods in WEBrick servlets
+
+Attributes
+
+addr[R]
+The socket address of the server
+
+attributes[R]
+Hash of request attributes
+
+cipher[R]
+HTTP request SSL cipher
+
+client_cert[R]
+HTTP request client certificate
+
+keep_alive[R]
+Is this a keep-alive connection?
+
+peeraddr[R]
+The socket address of the client
+
+request_time[R]
+The local time this request was received
+
+server_cert[R]
+HTTP request server certificate
+
+user[RW]
+The remote user (CGI variable)
+
+Public Class Methods
+
+new(config)
+Creates a new HTTP request. WEBrick::Config::HTTP is the default configuration.
+
+Public Instance Methods
+
+[](header_name)
+Retrieves header_name
+
+body()
+Returns the request body.
+
+content_length()
+The content-length header
+
+content_type()
+The content-type header
+
+each()
+Iterates over the request headers
+
+host()
+The host this request is for
+
+keep_alive?()
+Should the connection this request was made on be kept alive?
+
+meta_vars()
+This method provides the metavariables defined by the revision 3 of “The WWW Common Gateway Interface Version 1.1” Web.Golux.Com/coar/cgi/
+
+parse(socket=nil)
+Parses a request from socket. This is called internally by WEBrick::HTTPServer.
+
+port()
+The port this request is for
+
+query()
+Request query as a Hash
+
+remote_ip()
+The client’s IP address
+
+server_name()
+The server name this request is for
+
+ssl?()
+Is this an SSL request?
+
+Header and entity body ↑ top
+
+Attributes
+
+accept[R]
+The Accept header value
+
+accept_charset[R]
+The Accept-Charset header value
+
+accept_encoding[R]
+The Accept-Encoding header value
+
+accept_language[R]
+The Accept-Language header value
+
+cookies[R]
+The parsed request cookies
+
+header[R]
+The parsed header of the request
+
+raw_header[R]
+The raw header of the request
+
+Request line ↑ top
+
+Attributes
+
+http_version[R]
+The HTTP version of the request
+
+request_line[R]
+The complete request line such as:
+
+GET / HTTP/1.1
+request_method[R]
+The request method, GET, POST, PUT, etc.
+
+unparsed_uri[R]
+The unparsed URI of the request
+
+Request-URI ↑ top
+
+Attributes
+
+path[R]
+The request path
+
+path_info[RW]
+The path info (CGI variable)
+
+query_string[RW]
+The query from the URI of the request
+
+request_uri[R]
+The parsed URI of the request
+
+script_name[RW]
+The script name (CGI variable)

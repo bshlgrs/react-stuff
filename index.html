@@ -1,32 +1,18 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <script type="text/javascript" src="lib/lodash.js"></script>
-    <script type="text/javascript" src="lib/react.js"></script>
-    <script type="text/javascript" src="lib/JSXTransformer.js"></script>
-    <script type="text/javascript" src="src/utils.js"></script>
-    <script type="text/jsx;harmony=true" src="src/calendar.jsx"></script>
-    <script type="text/jsx;harmony=true" src="src/calendarCell.jsx"></script>
-    <script type="text/jsx;harmony=true" src="src/calendarEvent.jsx"></script>
-    <script type="text/jsx;harmony=true" src="src/row.jsx"></script>
-    <link rel="stylesheet" href="bootstrap.css" type="text/css"></link>
-  </head>
-  <body>
-    <div class="container">
-      <div class="row">
-        <div class="col-xs-12">
-          <div id="calendar">
-          </div>
-        </div>
-      </div>
-    </div>
-  </body>
+<head>
+  <script type="text/javascript" src="src/text_render.js"></script>
 
-  <script type="text/jsx">
-      /** @jsx React.DOM */
-      React.renderComponent(
-        <Calendar />,
-        document.querySelector("#calendar")
-      );
-    </script>
-</html>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+  <textarea id="main" style="outline: none;"></textarea>
+
+  <div id="result"></div>
+</body>
+
+<script>
+  $("#main").on("keypress", function () {
+    $("#result").html(renderText($("#main").val()));
+  })
+</script>

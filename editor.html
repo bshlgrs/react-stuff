@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+
+  <!-- jQuery -->
+  <!-- // <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+  <script src="./electron-thing/src/jquery.js"></script>
+  <script src="./src/text_render.js"></script>
+
+ <!-- Bootstrap -->
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" />
+
+<style>
+:focus {
+outline: 0;
+}
+</style>
+
+</head>
+
+<body>
+<h1>whatever</h1>
+
+<div id="edit-place" contenteditable="true">
+<p>j asdfa sadf hello <b>[[sdf]]</b> da</p>
+
+<p>assfdfasdfafads</p>
+</div>
+
+<script>
+  thing = document.getElementById("edit-place");
+  $thing = $(thing);
+
+  function getCaretCharacterOffsetWithin(element) {
+    var caretOffset = 0;
+    var doc = element.ownerDocument || element.document;
+    var win = doc.defaultView || doc.parentWindow;
+    var sel;
+    if (typeof window.getSelection != "undefined") {
+      var range = window.getSelection().getRangeAt(0);
+      var selected = range.toString().length; // *
+      var preCaretRange = range.cloneRange();
+      preCaretRange.selectNodeContents(element);
+      preCaretRange.setEnd(range.endContainer, range.endOffset);
+
+      if(selected){ // *
+        caretOffset = preCaretRange.toString().length - selected; // *
+      } else { // *
+        caretOffset = preCaretRange.toString().length; 
+      } // *
+    } else if ( (sel = doc.selection) && sel.type != "Control") {
+        var textRange = sel.createRange();
+        var preCaretTextRange = doc.body.createTextRange();
+        preCaretTextRange.moveToElementText(element);
+        preCaretTextRange.setEndPoint("EndToEnd", textRange);
+        caretOffset = preCaretTextRange.text.length;
+    }
+    return caretOffset;
+  }
+
+  var oldHtml;
+
+  $thing.on("keyup", function () {
+    // var offset = getCaretCharacterOffsetWithin(thing);
+
+    var realStartPosition = getRealPosition();
+
+    var outHtml = renderText($thing.text());
+    if (oldHtml != outHtml) {
+      console.log("they're different");
+      console.log(oldHtml);
+      console.log(outHtml);
+      $thing.html(outHtml);
+
+      mySetRealPosition(realStartPosition);
+    }
+
+    oldHtml = outHtml;
+    
+    // var range = document.createRange();
+    // range.setStart(thing, offset);
+  })
+
+  var elementPosition = function(domElement) {
+    var parent = domElement.parentNode;
+    var siblings = parent.childNodes;
+
+    for (var i = siblings.length - 1; i >= 0; i--) {
+      if (siblings[i] == domElement) {
+        return i;
+      }
+    };
+
+    return -1;
+  }
+
+  var pathToRoot = function(domElement, rootNode) {
+    if (domElement == rootNode) {
+      return [];
+    } else {
+      var result = pathToRoot(domElement.parentNode, rootNode);
+      result.push(elementPosition(domElement));
+      return result;
+    }
+  }
+
+  var setCursorGeneral = function(rootNode, path, offset) {
+    var node = rootNode;
+
+    for (var i = 0; i < path.length; i++) {
+      var childNode = node.childNodes[path[i]];
+      if (childNode == undefined)
+        break;
+      node = childNode;
+    }
+
+    var range = document.createRange();
+    range.setStart(node, Math.min(offset, node.length));
+    range.setEnd(node, Math.min(offset, node.length));
+
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  var setCursor = function(path, offset) {
+    setCursorGeneral(thing, path, offset);
+  }
+
+  var getCursor = function () {
+    var selection = window.getSelection();
+    return [pathToRoot(selection.anchorNode, thing), selection.anchorOffset];
+  }
+
+  var getRealPosition = function () {
+    var cursor = getCursor();
+    var path = cursor[0];
+    var offset = cursor[1];
+
+    var result = 0;
+
+    node = thing;
+
+    for (var i = 0; i < path.length; i++) {
+      var birthOrder = path[i];
+      for (var j = 0; j < birthOrder; j++) {
+        result += sizeOfNode(node.childNodes[j])
+      }
+      node = node.childNodes[path[i]];
+    }
+
+    result += offset;
+
+    return result;
+  }
+
+  var mySetRealPosition = function(n) {
+    var start = setRealPosition(n, thing);
+    var end = setRealPosition(n, thing);
+
+    var range = document.createRange();
+    range.setStart(start[0], start[1]);
+    range.setEnd(end[0], end[1]);
+
+    var selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
+  var setRealPosition = function (n, node) {
+    if (node.length == undefined) {
+      for (var i = 0; i < node.childNodes.length; i++) {
+        var childNode = node.childNodes[i];
+        var childNodeSize = sizeOfNode(childNode);
+        if (childNodeSize > n) {
+          return setRealPosition(n, childNode);
+        } else {
+          n -= childNodeSize;
+        }
+      }
+
+      return "shit, it didn't work"
+    } else {
+      return [node, n];
+    }
+  }
+
+  var sizeOfNode = function(node) {
+    if (node.length != undefined) {
+      return node.length
+    } else {
+      total = 0;
+      for (var i = 0; i < node.childNodes.length; i++) {
+        total += sizeOfNode(node.childNodes[i]);
+      }
+      return total;
+    }
+  }
+
+  var outHtml = renderText($thing.text());
+  $thing.html(outHtml);
+</script>
+
+</body>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script type="text/javascript" src="lib/lodash.js"></script>
+    <script type="text/javascript" src="lib/react.js"></script>
+    <script type="text/javascript" src="lib/JSXTransformer.js"></script>
+    <script type="text/javascript" src="src/utils.js"></script>
+    <script type="text/jsx;harmony=true" src="bettersrc/App.jsx"></script>
+    <script type="text/jsx;harmony=true" src="bettersrc/SideNote.jsx"></script>
+    <script type="text/jsx;harmony=true" src="bettersrc/MainNote.jsx"></script>
+    <script type="text/jsx;harmony=true" src="bettersrc/NewNote.jsx"></script>
+    <link rel="stylesheet" href="bootstrap.css" type="text/css"></link>
+  </head>
+  <body>
+    <div class="container">
+      <div id="app">
+      </div>
+    </div>
+  </body>
+
+  <script type="text/jsx">
+      /** @jsx React.DOM */
+      React.renderComponent(
+        <App />,
+        document.querySelector("#app")
+      );
+    </script>
+</html>

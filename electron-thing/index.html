@@ -1,0 +1,17 @@
+<head>
+  <script type="text/javascript" src="src/jquery.js"></script>
+  <script type="text/javascript" src="src/text_render.js"></script>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+</head>
+
+<body>
+  <textarea id="main" style="outline: none;"></textarea>
+
+  <div id="result"></div>
+</body>
+
+<script defer>
+  $("#main").on("keyup", function () {
+    $("#result").html(renderText($("#main").val()));
+  })
+</script>
